@@ -1,8 +1,11 @@
 ---
 title: autoresearch理念【转载自X@AI探索指南】
 date: 2026-03-11
-categories: [思维框架][AI]
-tags: [转载]
+categories:
+  - 思维框架
+  - AI
+tags:
+  - 转载
 ---
 
 [说明] 转载自X@AI探索指南
