@@ -1,5 +1,15 @@
 main:
   - title: 首页
     url: /
+  - title: 项目
+    url: /projects/
+  - title: 搜索
+    url: /search/
+  - title: 工具
+    url: https://ckaesar.github.io/quick-tools/
+  - title: AI 30 天计划
+    url: https://ckaesar.github.io/ai-30days-plan/
+  - title: 早起挑战
+    url: https://4nqgqvn9pv.coze.site/
   - title: 关于
     url: /about/

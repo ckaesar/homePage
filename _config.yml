@@ -1,4 +1,4 @@
-title: 个人博客主页
+title: 山海
 name: 我的博客
 description: 记录技术、随笔与生活点滴
 locale: zh-CN
@@ -10,11 +10,17 @@ plugins:
   - jekyll-remote-theme
   - jekyll-include-cache
   - jekyll-paginate
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-github-metadata
 
 paginate: 5
 paginate_path: "/page:num/"
 
 minimal_mistakes_skin: default
+
+search: true
+search_provider: lunr
 
 author:
   name: 坐井说天客
@@ -28,6 +34,32 @@ author:
     - label: Email
       icon: "fas fa-envelope"
       url: mailto:example@example.com
+    - label: Quick Tools
+      icon: "fas fa-wrench"
+      url: https://ckaesar.github.io/quick-tools/
+    - label: AI 30 Days
+      icon: "fas fa-robot"
+      url: https://ckaesar.github.io/ai-30days-plan/
+    - label: 早起挑战
+      icon: "fas fa-sun"
+      url: https://4nqgqvn9pv.coze.site/
+
+comments:
+  provider: utterances
+  utterances:
+    repo: ckaesar/homePage
+    issue_term: pathname
+    label: comment
+    theme: github-light
+
+analytics:
+  provider: google-gtag
+  google:
+    tracking_id: G-XXXXXXXXXX
+    anonymize_ip: true
+
+repository: ckaesar/homePage
+repository_tree: master
 
 defaults:
   - scope:
@@ -36,6 +68,7 @@ defaults:
     values:
       layout: single
       author_profile: true
+      comments: true
 
 exclude:
   - Gemfile
