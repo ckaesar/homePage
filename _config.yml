@@ -14,6 +14,9 @@ plugins:
   - jekyll-sitemap
   - jekyll-github-metadata
 
+url: "https://ckaesar.github.io"
+baseurl: "/homePage"
+
 paginate: 5
 paginate_path: "/page:num/"
 
@@ -30,19 +33,10 @@ author:
   links:
     - label: GitHub
       icon: "fab fa-github"
-      url: https://github.com/
+      url: https://github.com/ckaesar/homePage
     - label: Email
       icon: "fas fa-envelope"
       url: mailto:example@example.com
-    - label: Quick Tools
-      icon: "fas fa-wrench"
-      url: https://ckaesar.github.io/quick-tools/
-    - label: AI 30 Days
-      icon: "fas fa-robot"
-      url: https://ckaesar.github.io/ai-30days-plan/
-    - label: 早起挑战
-      icon: "fas fa-sun"
-      url: https://4nqgqvn9pv.coze.site/
 
 comments:
   provider: utterances
@@ -60,6 +54,10 @@ analytics:
 
 repository: ckaesar/homePage
 repository_tree: master
+
+collections:
+  projects:
+    output: true
 
 defaults:
   - scope:

@@ -7,9 +7,12 @@ main:
     url: /search/
   - title: 工具
     url: https://ckaesar.github.io/quick-tools/
+    external: true
   - title: AI 30 天计划
     url: https://ckaesar.github.io/ai-30days-plan/
+    external: true
   - title: 早起挑战
     url: https://4nqgqvn9pv.coze.site/
+    external: true
   - title: 关于
     url: /about/
