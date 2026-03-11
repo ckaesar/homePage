@@ -1,3 +1,99 @@
+{% if page.layout == "home" %}
+<aside class="home-right-rail" aria-label="分类与标签">
+  <section class="home-right-rail__section">
+    <div class="home-right-rail__title">分类</div>
+    <ul class="home-right-rail__list">
+      {% assign categories_sorted = site.categories | sort %}
+      {% for category in categories_sorted %}
+        {% assign category_name = category[0] %}
+        {% assign category_posts = category[1] %}
+        <li class="home-right-rail__item">
+          <a href="{{ '/categories/' | relative_url }}#{{ category_name | slugify }}">{{ category_name }}</a>
+          <span class="home-right-rail__count">{{ category_posts | size }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="home-right-rail__section">
+    <div class="home-right-rail__title">标签</div>
+    <ul class="home-right-rail__list">
+      {% assign tags_sorted = site.tags | sort %}
+      {% for tag in tags_sorted %}
+        {% assign tag_name = tag[0] %}
+        {% assign tag_posts = tag[1] %}
+        <li class="home-right-rail__item">
+          <a href="{{ '/tags/' | relative_url }}#{{ tag_name | slugify }}">{{ tag_name }}</a>
+          <span class="home-right-rail__count">{{ tag_posts | size }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+</aside>
+
+<style>
+  .home-right-rail {
+    position: fixed;
+    top: 5.25rem;
+    right: 1.25rem;
+    width: 18rem;
+    max-height: calc(100vh - 7rem);
+    overflow: auto;
+    padding: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(6px);
+    z-index: 50;
+  }
+
+  .home-right-rail__section + .home-right-rail__section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .home-right-rail__title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .home-right-rail__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .home-right-rail__item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+    font-size: 0.9rem;
+  }
+
+  .home-right-rail__item a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .home-right-rail__count {
+    flex: 0 0 auto;
+    font-size: 0.8rem;
+    opacity: 0.75;
+  }
+
+  @media (max-width: 1200px) {
+    .home-right-rail {
+      display: none;
+    }
+  }
+</style>
+{% endif %}
+
 <script>
   (function () {
     var origin = window.location.origin;
