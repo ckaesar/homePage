@@ -70,6 +70,16 @@ defaults:
       layout: single
       author_profile: true
       comments: true
+  - scope:
+      path: ""
+      type: pages
+    values:
+      author_profile: true
+  - scope:
+      path: ""
+      type: projects
+    values:
+      author_profile: true
 
 exclude:
   - Gemfile
