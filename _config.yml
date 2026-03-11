@@ -70,16 +70,19 @@ defaults:
       layout: single
       author_profile: true
       comments: true
+      classes: wide
   - scope:
       path: ""
       type: pages
     values:
       author_profile: true
+      classes: wide
   - scope:
       path: ""
       type: projects
     values:
       author_profile: true
+      classes: wide
 
 exclude:
   - Gemfile

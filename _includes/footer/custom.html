@@ -33,23 +33,23 @@
 
 <style>
   :root {
-    --right-rail-width: 14rem;
+    --right-rail-width: 12rem;
   }
 
   @media (min-width: 1201px) {
     .initial-content {
-      padding-right: calc(var(--right-rail-width) + 3.25rem);
+      padding-right: calc(var(--right-rail-width) + 2.25rem);
     }
   }
 
   .home-right-rail {
     position: fixed;
     top: 5.25rem;
-    right: 1.25rem;
+    right: 0.75rem;
     width: var(--right-rail-width);
     max-height: calc(100vh - 7rem);
     overflow: auto;
-    padding: 1rem;
+    padding: 0.75rem;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 0.5rem;
     background: rgba(255, 255, 255, 0.9);
@@ -170,8 +170,8 @@
     if (!rail || !handle) return;
 
     var storageKey = "rightRailWidth";
-    var min = 220;
-    var max = 460;
+    var min = 180;
+    var max = 420;
 
     function clamp(v) {
       if (v < min) return min;
