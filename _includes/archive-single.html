@@ -1,0 +1,30 @@
+{% assign entry = post | default: page %}
+{% assign title = entry.title | markdownify | remove: "<p>" | remove: "</p>" %}
+{% assign href = entry.url | relative_url %}
+{% assign is_external = false %}
+
+{% if entry.external_url %}
+  {% assign href = entry.external_url %}
+  {% assign is_external = true %}
+{% elsif entry.link %}
+  {% assign href = entry.link %}
+  {% assign is_external = true %}
+{% endif %}
+
+<div class="{{ include.type | default: "list" }}__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    {% if entry.header.teaser %}
+      <div class="archive__item-teaser">
+        <img src="{{ entry.header.teaser | relative_url }}" alt="">
+      </div>
+    {% endif %}
+
+    <h2 class="archive__item-title" itemprop="headline">
+      <a href="{{ href }}"{% if is_external %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ title }}</a>
+    </h2>
+
+    {% if entry.excerpt %}
+      <p class="archive__item-excerpt" itemprop="description">{{ entry.excerpt | markdownify | strip_html | truncate: 160 }}</p>
+    {% endif %}
+  </article>
+</div>
