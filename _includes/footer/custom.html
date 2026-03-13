@@ -4,12 +4,6 @@
   <div class="home-right-rail__pv">
     <span id="busuanzi_container_page_pv">阅读 <span id="busuanzi_value_page_pv"></span> 次</span>
   </div>
-  <div class="home-right-rail__share" aria-label="分享">
-    <button class="home-right-rail__share-btn" type="button" data-share="x">X</button>
-    <button class="home-right-rail__share-btn" type="button" data-share="zhihu">知乎</button>
-    <button class="home-right-rail__share-btn" type="button" data-share="toutiao">头条</button>
-    <button class="home-right-rail__share-btn" type="button" data-share="copy">复制</button>
-  </div>
   {% endif %}
   <section class="home-right-rail__section">
     <div class="home-right-rail__title">分类</div>
@@ -132,28 +126,62 @@
     margin-bottom: 0.5rem;
   }
 
-  .home-right-rail__share {
+  .post-share-bar {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
-    gap: 0.35rem;
-    margin-bottom: 0.75rem;
+    gap: 0.5rem;
+    margin: 0.75rem 0 1.25rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(6px);
   }
 
-  .home-right-rail__share-btn {
+  .post-share-bar__label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin-right: 0.25rem;
+  }
+
+  .post-share-bar__btn {
     appearance: none;
     border: 1px solid rgba(0, 0, 0, 0.12);
     background: rgba(255, 255, 255, 0.85);
     border-radius: 999px;
-    padding: 0.18rem 0.45rem;
-    font-size: 0.8rem;
+    padding: 0.22rem 0.6rem;
+    font-size: 0.85rem;
     line-height: 1.2;
     cursor: pointer;
     user-select: none;
   }
 
-  .home-right-rail__share-btn:hover {
+  .post-share-bar__btn:hover {
     border-color: rgba(0, 0, 0, 0.2);
     background: rgba(255, 255, 255, 0.95);
+  }
+
+  .post-share-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 1.25rem;
+    transform: translateX(-50%);
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: rgba(15, 23, 42, 0.92);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.9rem;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+  }
+
+  .post-share-toast.is-visible {
+    opacity: 1;
   }
 
   @media (max-width: 1200px) {
@@ -186,16 +214,48 @@
       return encodeURIComponent(v || "");
     }
 
-    function getShareText() {
-      var titleEl = document.querySelector('meta[property="og:title"]') || document.querySelector("title");
-      var title = titleEl ? (titleEl.getAttribute("content") || titleEl.textContent || "").trim() : document.title;
+    function getMetaContent(selector) {
+      var el = document.querySelector(selector);
+      if (!el) return "";
+      return (el.getAttribute("content") || "").trim();
+    }
+
+    function getTitle() {
+      var og = getMetaContent('meta[property="og:title"]');
+      if (og) return og;
+      var h1 = document.querySelector(".page__title");
+      if (h1) return (h1.textContent || "").trim();
+      return (document.title || "").trim();
+    }
+
+    function getExcerpt() {
+      var ogd = getMetaContent('meta[property="og:description"]');
+      if (ogd) return ogd;
+      var md = getMetaContent('meta[name="description"]');
+      if (md) return md;
+      var p = document.querySelector(".page__content p");
+      if (p) return (p.textContent || "").trim();
+      return "";
+    }
+
+    function getShareText(platform) {
+      var title = getTitle();
       var url = window.location.href;
-      return title + "\n" + url;
+      var excerpt = getExcerpt();
+
+      if (platform === "zhihu" || platform === "toutiao") {
+        var lines = [];
+        if (title) lines.push(title);
+        if (excerpt) lines.push("", excerpt);
+        lines.push("", "原文链接：" + url);
+        return lines.join("\n");
+      }
+
+      return (title ? title + "\n" : "") + url;
     }
 
     function openShare(type) {
-      var titleEl = document.querySelector('meta[property="og:title"]') || document.querySelector("title");
-      var title = titleEl ? (titleEl.getAttribute("content") || titleEl.textContent || "").trim() : document.title;
+      var title = getTitle();
       var url = window.location.href;
 
       if (type === "x") {
@@ -205,12 +265,12 @@
       }
 
       if (type === "zhihu") {
-        window.open("https://www.zhihu.com/", "_blank", "noopener,noreferrer");
+        window.open("https://zhuanlan.zhihu.com/write", "_blank", "noopener,noreferrer");
         return;
       }
 
       if (type === "toutiao") {
-        window.open("https://www.toutiao.com/", "_blank", "noopener,noreferrer");
+        window.open("https://mp.toutiao.com/profile_v4/graphic/publish", "_blank", "noopener,noreferrer");
         return;
       }
     }
@@ -239,19 +299,79 @@
       });
     }
 
+    function ensureToast() {
+      var toast = document.querySelector(".post-share-toast");
+      if (toast) return toast;
+      toast = document.createElement("div");
+      toast.className = "post-share-toast";
+      document.body.appendChild(toast);
+      return toast;
+    }
+
+    function showToast(message) {
+      var toast = ensureToast();
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+      window.clearTimeout(showToast._t);
+      showToast._t = window.setTimeout(function () {
+        toast.classList.remove("is-visible");
+      }, 2400);
+    }
+
+    function insertShareBar() {
+      var existing = document.querySelector(".post-share-bar");
+      if (existing) return;
+
+      var bar = document.createElement("div");
+      bar.className = "post-share-bar";
+      bar.innerHTML =
+        '<span class="post-share-bar__label">分享</span>' +
+        '<button class="post-share-bar__btn" type="button" data-share="x">X</button>' +
+        '<button class="post-share-bar__btn" type="button" data-share="zhihu">知乎</button>' +
+        '<button class="post-share-bar__btn" type="button" data-share="toutiao">头条</button>' +
+        '<button class="post-share-bar__btn" type="button" data-share="copy">复制链接</button>';
+
+      var title = document.querySelector(".page__title");
+      if (title && title.parentNode) {
+        title.insertAdjacentElement("afterend", bar);
+        return;
+      }
+
+      var content = document.querySelector(".page__content");
+      if (content) {
+        content.insertAdjacentElement("afterbegin", bar);
+      }
+    }
+
+    insertShareBar();
+
     document.addEventListener("click", function (e) {
       var btn = e.target && e.target.closest ? e.target.closest("[data-share]") : null;
       if (!btn) return;
 
       var type = btn.getAttribute("data-share");
-      var text = getShareText();
+      var text = getShareText(type);
 
       if (type === "copy") {
-        copyToClipboard(text);
+        copyToClipboard(text).then(
+          function () {
+            showToast("已复制到剪贴板");
+          },
+          function () {
+            showToast("复制失败，请手动复制");
+          }
+        );
         return;
       }
 
-      copyToClipboard(text);
+      copyToClipboard(text).then(
+        function () {
+          showToast("已复制内容，请在新打开的编辑器粘贴后发布");
+        },
+        function () {
+          showToast("复制失败，请手动复制");
+        }
+      );
       openShare(type);
     });
   })();
