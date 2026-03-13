@@ -4,6 +4,12 @@
   <div class="home-right-rail__pv">
     <span id="busuanzi_container_page_pv">阅读 <span id="busuanzi_value_page_pv"></span> 次</span>
   </div>
+  <div class="home-right-rail__share" aria-label="分享">
+    <button class="home-right-rail__share-btn" type="button" data-share="x">X</button>
+    <button class="home-right-rail__share-btn" type="button" data-share="zhihu">知乎</button>
+    <button class="home-right-rail__share-btn" type="button" data-share="toutiao">头条</button>
+    <button class="home-right-rail__share-btn" type="button" data-share="copy">复制</button>
+  </div>
   {% endif %}
   <section class="home-right-rail__section">
     <div class="home-right-rail__title">分类</div>
@@ -126,6 +132,30 @@
     margin-bottom: 0.5rem;
   }
 
+  .home-right-rail__share {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .home-right-rail__share-btn {
+    appearance: none;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 999px;
+    padding: 0.18rem 0.45rem;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .home-right-rail__share-btn:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.95);
+  }
+
   @media (max-width: 1200px) {
     .home-right-rail {
       top: auto;
@@ -148,6 +178,85 @@
 </style>
 
 <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+{% if page.collection == "posts" %}
+<script>
+  (function () {
+    function encode(v) {
+      return encodeURIComponent(v || "");
+    }
+
+    function getShareText() {
+      var titleEl = document.querySelector('meta[property="og:title"]') || document.querySelector("title");
+      var title = titleEl ? (titleEl.getAttribute("content") || titleEl.textContent || "").trim() : document.title;
+      var url = window.location.href;
+      return title + "\n" + url;
+    }
+
+    function openShare(type) {
+      var titleEl = document.querySelector('meta[property="og:title"]') || document.querySelector("title");
+      var title = titleEl ? (titleEl.getAttribute("content") || titleEl.textContent || "").trim() : document.title;
+      var url = window.location.href;
+
+      if (type === "x") {
+        var intent = "https://twitter.com/intent/tweet?text=" + encode(title) + "&url=" + encode(url);
+        window.open(intent, "_blank", "noopener,noreferrer");
+        return;
+      }
+
+      if (type === "zhihu") {
+        window.open("https://www.zhihu.com/", "_blank", "noopener,noreferrer");
+        return;
+      }
+
+      if (type === "toutiao") {
+        window.open("https://www.toutiao.com/", "_blank", "noopener,noreferrer");
+        return;
+      }
+    }
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+
+      return new Promise(function (resolve, reject) {
+        try {
+          var ta = document.createElement("textarea");
+          ta.value = text;
+          ta.setAttribute("readonly", "");
+          ta.style.position = "fixed";
+          ta.style.top = "-1000px";
+          ta.style.left = "-1000px";
+          document.body.appendChild(ta);
+          ta.select();
+          var ok = document.execCommand("copy");
+          document.body.removeChild(ta);
+          ok ? resolve() : reject(new Error("copy failed"));
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }
+
+    document.addEventListener("click", function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest("[data-share]") : null;
+      if (!btn) return;
+
+      var type = btn.getAttribute("data-share");
+      var text = getShareText();
+
+      if (type === "copy") {
+        copyToClipboard(text);
+        return;
+      }
+
+      copyToClipboard(text);
+      openShare(type);
+    });
+  })();
+</script>
+{% endif %}
 
 <script>
   (function () {
