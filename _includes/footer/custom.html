@@ -1,5 +1,10 @@
 <aside class="home-right-rail" aria-label="分类与标签">
   <div class="home-right-rail__resize" aria-hidden="true"></div>
+  {% if page.collection == "posts" %}
+  <div class="home-right-rail__pv">
+    <span id="busuanzi_container_page_pv">阅读 <span id="busuanzi_value_page_pv"></span> 次</span>
+  </div>
+  {% endif %}
   <section class="home-right-rail__section">
     <div class="home-right-rail__title">分类</div>
     <ul class="home-right-rail__list">
@@ -115,6 +120,12 @@
     opacity: 0.75;
   }
 
+  .home-right-rail__pv {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin-bottom: 0.5rem;
+  }
+
   @media (max-width: 1200px) {
     .home-right-rail {
       top: auto;
@@ -135,6 +146,8 @@
     }
   }
 </style>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 <script>
   (function () {
